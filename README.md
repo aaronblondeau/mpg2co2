@@ -130,7 +130,9 @@ export PGSSL=yes
 
 #### 10. Run PM2 setup and deploy
 
-These commands are run from your local development environment in the same directory as this readme.  Note, if on Windows, run with a WSL shell instead of PowerShell.
+These commands are run from your local development environment in the same directory as this readme.
+
+Note, if on Windows, you may get a "spawn sh ENOENT" error.  You can resolve this by making sure "sh" is in your path : https://github.com/Unitech/pm2/issues/3839#issuecomment-484347776
 
 ```
 pm2 deploy staging setup
@@ -140,5 +142,24 @@ pm2 deploy staging setup
 pm2 deploy staging
 ```
 
-#### 11. Configure caddyfile reverse proxy
+#### 11. Setup DNS records
 
+Do this first, before configuring Caddyfile, so that it can complete the Let's Encrypt SSL setup on the first go.
+
+A : staging -> 104.238.135.191
+
+#### 12. Configure caddyfile reverse proxy
+
+Back on the server, add the following to /etc/caddy/Caddyfile
+
+```
+staging.mpg2co2.com {
+	reverse_proxy localhost:3000
+}
+```
+
+Reload caddy (run this in /etc/caddy)
+
+```
+sudo caddy reload
+```
