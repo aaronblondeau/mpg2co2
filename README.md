@@ -163,3 +163,7 @@ Reload caddy (run this in /etc/caddy)
 ```
 sudo caddy reload
 ```
+
+### Production
+
+Production deploy was done on staging box (different port and caddyfile entry) to save $.
