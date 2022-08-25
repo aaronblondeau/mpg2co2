@@ -171,3 +171,15 @@ Production deploy was done on staging box (different port and caddyfile entry) t
 ```
 pm2 deploy ecosystem.production.config.js production
 ```
+
+For production domain setup A record for @ and www, and did www strip in Caddyfile:
+
+```
+mpg2co2.com {
+        reverse_proxy localhost:3001
+}
+
+www.mpg2co2.com {
+        redir https://mpg2co2.com{uri}
+}
+```
