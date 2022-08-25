@@ -17,9 +17,7 @@ yarn install
 yarn dev
 ```
 
-## Deployment with pm2
-
-In progress...
+## Local PM2
 
 To start locally with PM2
 
@@ -32,3 +30,17 @@ To stop locally with PM2
 ```
 pm2 stop ecosystem.config.js
 ```
+
+## Hosting on Vultr w/ Caddy and PM2
+
+### Staging
+
+1) Deploy new instance
+- Cloud Compute
+- Intel Regular Performance
+- New York
+- Debian 11
+- $3.50 Box
+- No Backups
+- Added id_ed25519.pub key
+- hostname & label : staging.mpg2co2.com
