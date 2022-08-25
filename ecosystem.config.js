@@ -21,7 +21,7 @@ module.exports = {
             'post-setup': 'yarn install',
             'post-deploy' : 'pm2 reload ecosystem.config.js --env staging',
         },
-        staging : {
+        production : {
             user : 'root',
             host : '104.238.135.191',
             ref  : 'origin/main',
