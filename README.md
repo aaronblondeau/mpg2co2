@@ -135,11 +135,11 @@ These commands are run from your local development environment in the same direc
 Note, if on Windows, you may get a "spawn sh ENOENT" error.  You can resolve this by making sure "sh" is in your path : https://github.com/Unitech/pm2/issues/3839#issuecomment-484347776
 
 ```
-pm2 deploy staging setup
+pm2 deploy ecosystem.config.staging.js staging setup
 ```
 
 ```
-pm2 deploy staging
+pm2 deploy ecosystem.config.staging.js staging
 ```
 
 #### 11. Setup DNS records
@@ -167,3 +167,7 @@ sudo caddy reload
 ### Production
 
 Production deploy was done on staging box (different port and caddyfile entry) to save $.
+
+```
+pm2 deploy ecosystem.config.production.js production
+```
