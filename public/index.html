@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mpg2co2</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
+    <script defer src="https://unpkg.com/alpinejs@3.10.3/dist/cdn.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+            <a class="pure-menu-heading" href="">mpg2co2</a>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="content">
+            <h2 class="content-head is-center">Calculate Vehicle Emissisons in Pounds of Carbon Per Mile</h2>
+        </div>
+
+        <div x-data style="text-align: center;">
+            <div x-show="$store.main.loadingYears">
+                Loading Vehicle Years...
+            </div>
+            <div x-show="$store.main.years.length > 0">
+                <label for="year">Vehicle Year</label>
+                <select id="year" x-model="$store.main.selectedYear">
+                    <option disabled value="">Please Select Year</option>
+                    <template x-for="year in $store.main.years">
+                        <option x-text="year"></option>
+                    </template>
+                </select>
+            </div>
+
+            <div style="margin-top: 20px;"></div>
+            <div x-show="$store.main.loadingMakes">
+                Loading Vehicle Makes...
+            </div>
+            <div x-show="$store.main.makes.length > 0">
+                <label for="make">Vehicle Make</label>
+                <select id="make" x-model="$store.main.selectedMake">
+                    <option disabled value="">Please Select Make</option>
+                    <template x-for="make in $store.main.makes">
+                        <option x-text="make"></option>
+                    </template>
+                </select>
+            </div>
+
+            <div style="margin-top: 20px;"></div>
+            <div x-show="$store.main.loadingModels">
+                Loading Vehicle Models...
+            </div>
+            <div x-show="$store.main.models.length > 0">
+                <label for="model">Vehicle Model</label>
+                <select id="model" x-model="$store.main.selectedModel">
+                    <option disabled value="">Please Select Model</option>
+                    <template x-for="model in $store.main.models">
+                        <option x-text="model"></option>
+                    </template>
+                </select>
+            </div>
+
+            <div style="margin-top: 20px;"></div>
+            <div x-show="$store.main.loadingModels">
+                Loading Fuel Economy Data...
+            </div>
+            <template x-if="$store.main.mpgData">
+                <div style="color: black; font-size: 1.4em; font-weight: bold;">
+                    This vehicle emits
+                    <span x-text="Math.round($store.main.mpgData.co2tailpipegpm * 0.00220462 * 1000) / 1000"></span>
+                    pounds of tailpipe carbon per mile.
+                </div>
+            </template>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <div>Data from <a href="https://www.fueleconomy.gov/feg/download.shtml">fueleconomy.gov</a>.</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('main', {
+                loadingYears: false,
+                years: [],
+                selectedYear: "",
+
+                loadingMakes: false,
+                makes: [],
+                selectedMake: "",
+
+                loadingModels: false,
+                models: [],
+                selectedModel: "",
+
+                loadingMpgData: false,
+                mpgData: null,
+
+                init() {
+                    this.loadYears()
+
+                    Alpine.effect(() => {
+                        this.selectedMake = ""
+                        this.selectedModel = ""
+                        this.loadMakes(this.selectedYear)
+                    });
+
+                    Alpine.effect(() => {
+                        this.selectedModel = ""
+                        this.loadModels(this.selectedYear, this.selectedMake)
+                    });
+
+                    Alpine.effect(() => {
+                        this.loadMpgData(this.selectedYear, this.selectedMake, this.selectedModel)
+                    });
+                },
+
+                async loadMpgData(year, make, model) {
+                    this.mpgData = null
+                    if (!year || !make || !model) {
+                        return
+                    }
+                    this.loadingMpgData = true
+                    try  {
+                        const response = await fetch('/year/' + year + '/make/' + encodeURIComponent(make) + '/model/' + encodeURIComponent(model))
+                        this.mpgData = await response.json()
+
+                        // Notes : https://www.fueleconomy.gov/feg/ws/
+                        // co2TailpipeGpm = tailpipe CO2 in grams/mile for fuelType1
+
+                    } catch (error) {
+                        // TODO - user feedback
+                        console.error(error)
+                    } finally {
+                        this.loadingMpgData = false
+                    }
+                },
+
+                async loadModels(year, make) {
+                    this.models = []
+                    if (!year || !make) {
+                        return
+                    }
+                    this.loadingModels = true
+                    try  {
+                        const response = await fetch('/year/' + year + '/make/' + encodeURIComponent(make) + '/models')
+                        this.models = await response.json()
+                    } catch (error) {
+                        // TODO - user feedback
+                        console.error(error)
+                    } finally {
+                        this.loadingModels = false
+                    }
+                },
+
+                async loadMakes(year) {
+                    this.makes = []
+                    if (!year) {
+                        return
+                    }
+                    this.loadingMakes = true
+                    try {
+                        const response = await fetch('/year/' + year + '/makes')
+                        this.makes = await response.json()
+                    } catch (error) {
+                        // TODO - user feedback
+                        console.error(error)
+                    } finally {
+                        this.loadingMakes = false
+                    }
+                },
+     
+                async loadYears() {
+                    this.loadingYears = true
+                    try {
+                        const response = await fetch('/years')
+                        this.years = await response.json()
+                    } catch (error) {
+                        // TODO - user feedback
+                        console.error(error)
+                    } finally {
+                        this.loadingYears = false
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "mpg2co2",
+  "version": "1.0.0",
+  "description": "Calculate vehicle carbon impact",
+  "main": "index.js",
+  "author": "Aaron Blondeau",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "@godaddy/terminus": "^4.11.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "lodash": "^4.17.21",
+    "pg": "^8.8.0"
+  }
+}
