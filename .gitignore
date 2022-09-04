@@ -3,3 +3,4 @@ node_modules
 vehicles.csv
 github_action_key
 github_action_key.pub
+deploy.key

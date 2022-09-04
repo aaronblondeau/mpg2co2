@@ -12,6 +12,7 @@ module.exports = {
         staging : {
             user : 'root',
             host : '104.238.135.191',
+            key  : './deploy.key',
             ref  : 'origin/staging',
             repo : 'git@github.com:aaronblondeau/mpg2co2.git',
             path : '/var/www/mpg2co2',
