@@ -20,7 +20,7 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
-    - run: more ~/.ssh/known_hosts
+    - run: tail -c 50 ~/.ssh/known_hosts
     - name: Install PM2
       run: npm install -g pm2
     - name: Deploy
