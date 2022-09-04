@@ -9,8 +9,6 @@ jobs:
     steps:
     - name: Check out repository code
       uses: actions/checkout@v3
-    - run: echo "spk ${{secrets.SSH_PRIVATE_KEY}}"
-    - run: echo "spk ${{secrets.SSH_KNOWN_HOSTS}}"
     # https://dev.to/goodidea/setting-up-pm2-ci-deployments-with-github-actions-1494
     - name: Set up SSH
       run: |
@@ -22,6 +20,7 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
         SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+    - run: more ~/.ssh/known_hosts
     - name: Install PM2
       run: npm install -g pm2
     - name: Deploy
