@@ -193,3 +193,22 @@ www.mpg2co2.com {
         redir https://mpg2co2.com{uri}
 }
 ```
+
+### Github Action Setup Notes
+
+First, create an ssh key
+
+name = ./github_action_key
+passprase = empty
+
+```
+ssh-keygen -t ed25519 -C "github_deploy_action"
+```
+
+ssh in to application's server and add github_action_key.pub content as new line in ~/.ssh/authorized_keys
+
+Then in GitHub, go to Repo Settings > Secrets > Actions > New Repository Secret
+
+put github_action_key file's contents into repo secret named SSH_PRIVATE_KEY
+
+Connect to server with new key (ssh -i .\github_action_key root@104.238.135.191) and get generated entry from known hosts, add it to repo secret SSH_KNOWN_HOSTS
