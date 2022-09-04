@@ -7,11 +7,12 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
     # https://github.com/marketplace/actions/ssh-setup
     - name: Setup SSH
       uses: MrSquaare/ssh-setup-action@v1
       with:
-        host: github.com
+        host: 104.238.135.191
         private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: Install PM2
       run: npm i pm2
