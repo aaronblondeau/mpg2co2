@@ -1,5 +1,5 @@
 node_modules
 .env
 vehicles.csv
-github_action_rsa
-github_action_rsa.pub
+github_action_key
+github_action_key.pub
