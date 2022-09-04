@@ -1,0 +1,26 @@
+name: Deploy to Staging
+on:
+  push:
+    branches: [ staging ]
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+    # https://dev.to/goodidea/setting-up-pm2-ci-deployments-with-github-actions-1494
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_PRIVATE_KEY" > ./gitub_action_key
+        sudo chmod 600 ./gitub_action_key
+        echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+      shell: bash
+      env:
+        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+        SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+    - name: Install PM2
+      run: npm install -g pm2
+    - name: Deploy
+      run: pm2 deploy ecosystem.staging.config.js staging
