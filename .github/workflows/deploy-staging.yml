@@ -14,7 +14,7 @@ jobs:
       run: |
         mkdir -p ~/.ssh/
         echo "$SSH_PRIVATE_KEY" > ./gitub_action_key
-        sudo chmod 600 ./deploy.key
+        sudo chmod 600 ./gitub_action_key
         echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
       shell: bash
       env:
