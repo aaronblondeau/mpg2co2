@@ -9,6 +9,8 @@ jobs:
     steps:
     - name: Check out repository code
       uses: actions/checkout@v3
+    - run: echo "spk ${{secrets.SSH_PRIVATE_KEY}}"
+    - run: echo "spk ${{secrets.SSH_KNOWN_HOSTS}}"
     # https://dev.to/goodidea/setting-up-pm2-ci-deployments-with-github-actions-1494
     - name: Set up SSH
       run: |
